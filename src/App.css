@@ -933,7 +933,7 @@
 }
 
 /* ===== Detail level dan petualangan rintangan ===== */
-.level-intro { position: relative; z-index: 1; display: flex; min-height: 0; flex: 1; flex-direction: column; gap: 9px; overflow: auto; padding: max(14px,env(safe-area-inset-top)) 18px max(16px,env(safe-area-inset-bottom)); }
+.level-intro { position: relative; z-index: 1; display: flex; min-height: 0; flex: 1; flex-direction: column; gap: 7px; overflow: hidden; padding: max(10px,env(safe-area-inset-top)) 18px max(10px,env(safe-area-inset-bottom)); }
 .level-intro__header { display: flex; min-height: 48px; flex: 0 0 auto; align-items: center; justify-content: space-between; gap: 12px; color: #123c73; }
 .level-intro__back,.level-game__pause { display: grid; width: 44px; height: 44px; flex: 0 0 auto; place-items: center; border: 0; border-radius: 50%; background: #fff; box-shadow: 0 3px 10px #17497928; color: #1767b5; font-size: 30px; cursor: pointer; }
 .level-intro__resources { display: flex; min-width: 150px; height: 42px; align-items: center; justify-content: space-around; gap: 10px; padding: 0 12px; border: 2px solid #57bafa; border-radius: 999px; background: linear-gradient(105deg,#07549b,#0879b8); box-shadow: 0 4px 0 #08477c, inset 0 2px 5px #ffffff2b; color: #fff; font-size: 15px; font-weight: 900; }
@@ -941,21 +941,24 @@
 .level-intro__resources span:first-child b { color: #ffd333; font-size: 21px; text-shadow: 0 2px 0 #c7710c; }
 .level-intro__resources span:last-child b { color: #ffb82e; font-size: 18px; font-style: normal; text-shadow: none; }
 .level-intro__resources i { width: 1px; height: 22px; background: #ffffff52; }
-.level-intro__title { display: grid; width: min(100%,440px); min-height: 94px; flex: 0 0 auto; place-items: center; align-self: center; }
-.level-intro__title img { display: block; width: 100%; height: auto; max-height: 150px; object-fit: contain; }
+.level-intro__title { display: grid; width: min(100%,440px); min-height: 78px; flex: 0 0 auto; place-items: center; align-self: center; }
+.level-intro__title img { display: block; width: 100%; height: auto; max-height: 110px; object-fit: contain; }
 .level-intro__plaque { display: grid; width: min(92%,420px); min-height: 78px; place-content: center; gap: 2px; padding: 8px 18px 12px; border: 4px solid #f6b630; border-radius: 24px; background: linear-gradient(180deg,#b96828,#9b451b); box-shadow: 0 6px 0 #713b26, inset 0 3px 0 #ffd26c, 0 0 0 4px #ffffffa8; color: white; text-align: center; text-shadow: 0 3px 0 #73381c; }
 .level-intro__plaque strong { font-size: clamp(26px,8vw,36px); line-height: 1; }
 .level-intro__plaque span { justify-self: center; margin: 3px -26px -16px; padding: 6px 22px; border: 3px solid #51c9ff; border-radius: 14px; background: linear-gradient(#1689e4,#0759bb); box-shadow: 0 4px 0 #034386; font-size: clamp(16px,4.8vw,22px); font-weight: 950; white-space: nowrap; }
-.level-intro__card { width: min(100%,440px); flex: 0 0 auto; align-self: center; padding: 14px 18px; border: 2px solid #fff; border-radius: 25px; background: #ffffffed; box-shadow: 0 8px 22px #17497920; }
-.level-intro__card h1 { margin: 0 0 4px; color: #123c73; font-size: 21px; }
-.level-intro__goal { margin: 0; color: #355b83; font-size: 15px; line-height: 1.4; }
-.level-intro__stars { display: flex; flex: 0 0 auto; justify-content: center; gap: 14px; margin: 0; color: #146ac7; font-size: 37px; line-height: 1; -webkit-text-stroke: 2px #fff; filter: drop-shadow(0 2px 1px #06477d); }
-.level-intro__facts { display: flex; min-height: 58px; width: min(100%,440px); flex: 0 0 auto; align-items: center; justify-content: space-evenly; gap: 8px; align-self: center; padding: 8px 12px; border: 2px solid #fff; border-radius: 22px; background: #ffffffeb; box-shadow: 0 6px 15px #17497920; color: #345c82; font-size: 14px; font-weight: 850; }
+.level-intro__card { width: min(100%,440px); flex: 0 0 auto; align-self: center; padding: 12px 16px; border: 2px solid #fff; border-radius: 25px; background: #ffffffed; box-shadow: 0 8px 22px #17497920; }
+.level-intro__card h1 { margin: 0 0 4px; color: #123c73; font-size: clamp(17px,4.2vw,21px); }
+.level-intro__goal { margin: 0; color: #355b83; font-size: clamp(13px,3vw,15px); line-height: 1.35; }
+.level-intro__card h2 { margin: 8px 0 4px; color: #1767a5; font-size: 14px; }
+.level-intro__targets { display: flex; flex-wrap: wrap; gap: 6px; margin: 7px 0 0; padding: 0; list-style: none; }
+.level-intro__targets li { padding: 5px 9px; border: 1px solid #c9e6f4; border-radius: 999px; background: #edf8ff; color: #1767a5; font-size: 11px; font-weight: 850; }
+.level-intro__stars { display: flex; flex: 0 0 auto; justify-content: center; gap: 14px; margin: 0; color: #146ac7; font-size: 32px; line-height: 1; -webkit-text-stroke: 2px #fff; filter: drop-shadow(0 2px 1px #06477d); }
+.level-intro__facts { display: flex; min-height: 50px; width: min(100%,440px); flex: 0 0 auto; align-items: center; justify-content: space-evenly; gap: 8px; align-self: center; padding: 6px 12px; border: 2px solid #fff; border-radius: 22px; background: #ffffffeb; box-shadow: 0 6px 15px #17497920; color: #345c82; font-size: 13px; font-weight: 850; }
 .level-intro__facts span { display: flex; align-items: center; gap: 8px; white-space: nowrap; }
 .level-intro__facts b { display: grid; width: 30px; height: 30px; place-items: center; border: 3px solid #1388d2; border-radius: 50%; color: #1472b9; font-size: 17px; }
-.level-intro__hero { position: relative; display: grid; min-height: 100px; flex: 1 1 auto; place-items: center; }
-.level-intro__hero .explorer-character { height: min(34svh,270px); max-height: 270px; filter: drop-shadow(0 7px 8px #1749793a); }
-.level-intro__start { display: flex; width: min(100%,360px); min-height: 66px; flex: 0 0 auto; align-items: center; justify-content: center; align-self: center; border: 4px solid #f28c08; border-radius: 999px; background: linear-gradient(#ffe94e,#ffc11c); box-shadow: 0 6px 0 #b75b10,inset 0 4px 0 #ffffffb8; color: #123e76; font: inherit; font-size: 25px; font-weight: 950; cursor: pointer; touch-action: manipulation; }
+.level-intro__hero { position: relative; display: grid; min-height: 48px; flex: 1 1 auto; place-items: center; }
+.level-intro__hero .explorer-character { height: min(16svh,150px); max-height: 150px; filter: drop-shadow(0 7px 8px #1749793a); }
+.level-intro__start { display: flex; width: min(100%,360px); min-height: 58px; flex: 0 0 auto; align-items: center; justify-content: center; align-self: center; border: 4px solid #f28c08; border-radius: 999px; background: linear-gradient(#ffe94e,#ffc11c); box-shadow: 0 6px 0 #b75b10,inset 0 4px 0 #ffffffb8; color: #123e76; font: inherit; font-size: 22px; font-weight: 950; cursor: pointer; touch-action: manipulation; }
 
 .level-game--adventure { position: relative; z-index: 1; display: flex; min-height: 0; flex: 1; flex-direction: column; gap: 8px; overflow: hidden; padding: max(10px,env(safe-area-inset-top)) 12px max(12px,env(safe-area-inset-bottom)); }
 .level-game__hud { display: flex; min-height: 44px; flex: 0 0 auto; align-items: center; justify-content: space-between; gap: 10px; color: #123c73; }
@@ -1024,9 +1027,15 @@
 .level-game__course-coins { position: absolute; z-index: 3; inset: 0; pointer-events: none; }
 .level-game__course-coins i { position: absolute; display: block; font-size: clamp(15px,4.5vw,21px); font-style: normal; filter: drop-shadow(0 2px 1px #875210); animation: coin-float 1.5s ease-in-out infinite; }
 .level-game__course-coins i:nth-child(even) { animation-delay: -.55s; }
-.level-game__course-flag { position: absolute; z-index: 3; display: block; width: 27px; height: 39px; transform: translate(-50%,50%); }
-.level-game__course-flag i { position: absolute; bottom: 0; left: 3px; width: 4px; height: 38px; border-radius: 4px; background: linear-gradient(90deg,#754728,#d08b39); box-shadow: 1px 0 2px #41280970; }
-.level-game__course-flag b { position: absolute; top: 0; left: 6px; width: 22px; height: 15px; border-radius: 2px 8px 8px 2px; background: linear-gradient(135deg,#ff7364,#e82e35); clip-path: polygon(0 0,100% 15%,75% 56%,100% 100%,0 78%); filter: drop-shadow(0 2px 1px #8f2933); }
+.level-game__course-coins i.is-collected { opacity: 0; animation: none; }
+.level-game__lives { white-space: nowrap; font-size: 13px; line-height: 1; }
+.level-game__course-flag { position: absolute; z-index: 4; display: grid; width: 86px; height: 100px; justify-items: center; transform: translate(-50%,50%); }
+.level-game__course-flag::before { position: absolute; inset: 13px 10px 24px; border: 3px solid #fff; border-radius: 50%; background: #ffe96872; box-shadow: 0 0 0 5px #ffe96852,0 4px 12px #17497945; content: ''; animation: goal-pulse 1.4s ease-in-out infinite alternate; }
+.level-game__course-flag span { position: relative; z-index: 2; align-self: start; padding: 4px 7px; border: 1px solid #fff; border-radius: 999px; background: #087c52; box-shadow: 0 2px 4px #123c7355; color: #fff; font-size: 8px; font-weight: 950; letter-spacing: .3px; white-space: nowrap; }
+.level-game__course-flag i { position: absolute; bottom: 4px; left: 50%; width: 5px; height: 67px; border-radius: 4px; background: linear-gradient(90deg,#754728,#d08b39); box-shadow: 1px 0 2px #41280970; transform: translateX(-50%); }
+.level-game__course-flag b { position: absolute; top: 22px; left: calc(50% + 2px); display: grid; width: 33px; height: 30px; place-items: center; border: 2px solid #fff; border-radius: 4px 10px 10px 4px; background: linear-gradient(135deg,#ff7364,#e82e35); box-shadow: 0 3px 4px #8f293366; color: #fff; font-size: 20px; line-height: 1; text-shadow: 0 1px 2px #8f2933; animation: goal-flag-wave .8s ease-in-out infinite alternate; }
+@keyframes goal-pulse { to { transform: scale(1.08); opacity: .7; } }
+@keyframes goal-flag-wave { to { transform: skewY(-7deg); } }
 .level-game__obstacle { display: block; width: 98px; height: 86px; aspect-ratio: auto; border: 0; border-radius: 0; background: transparent; box-shadow: none; color: #fff; font-size: inherit; transform: translate(-50%,50%); transition: filter .25s,transform .25s; }
 .level-game__obstacle.is-platform-2 { width: 108px; height: 98px; }
 .level-game__obstacle.is-platform-3 { width: 92px; height: 82px; }
@@ -1061,6 +1070,7 @@
 .level-game__collection-progress .is-triangle { color: #ffac26; text-shadow: 0 2px 0 #b75a13; }
 .level-game__collection-progress .is-square { color: #168ae2; text-shadow: 0 1px 0 #07509a; }
 .level-game__collection-progress .is-circle { color: #ee548d; text-shadow: 0 1px 0 #9f2854; }
+.level-game__collection-progress span.is-collected { border-color: #9cde83; background: #e5f8d9; color: #32934c; }
 .level-game__collection-progress b { margin-left: 4px; color: #123c73; font-size: 17px; }
 .level-game__collection-card > small { display: block; margin-top: 8px; color: #42698e; font-size: 11px; font-weight: 750; }
 .level-game__controls { position: relative; min-height: 80px; gap: 0; padding: 0; }
@@ -1081,6 +1091,9 @@
 .level-game__question-art { position: relative; display: grid; height: clamp(82px,15vh,112px); margin-bottom: 10px; overflow: hidden; place-items: center; border: 2px solid #d8effb; border-radius: 15px; background: linear-gradient(180deg,#ffffff40,#75c9e43d),url('./assets/obstacle-sky.png') center 43%/cover; }
 .level-game__question-art::before { position: absolute; right: -8%; bottom: -28px; left: -8%; height: 48px; border-radius: 50% 50% 0 0; background: linear-gradient(180deg,#a8e841,#56bb38); box-shadow: 0 -5px 14px #e0ff8e9c; content: ''; }
 .level-game__question-art span { z-index: 1; display: grid; width: 60px; height: 60px; place-items: center; border: 3px solid #fff; border-radius: 17px; background: linear-gradient(145deg,#ffe96a,#ffae22); box-shadow: 0 5px 0 #d77917,0 7px 14px #144a7152; color: #fff; font-size: 42px; font-weight: 950; line-height: 1; text-shadow: 0 2px 1px #a95811; }
+.level-game__question-art--object { background: linear-gradient(180deg,#dff5ff,#f7fcff 72%,#dff2d2); }
+.level-game__question-art--object::before { display: none; }
+.level-game__question-art--object svg { z-index: 1; width: min(58%,220px); height: 88%; overflow: visible; filter: drop-shadow(0 5px 3px #17497935); }
 .level-game__question-card .level-game__answers { gap: 7px; }
 .level-game__question-card .level-game__answer { min-height: 38px; border-width: 1px; border-radius: 12px; font-weight: 900; }
 .level-game__question-card .level-game__answer.is-choice-0:not(.is-correct):not(.is-wrong) { border-color: #eea317; background: linear-gradient(#ffe77b,#ffc52d); color: #174576; }
@@ -1117,6 +1130,8 @@
 .level-game__result-card { width: min(100%,370px); gap: 8px; padding: 13px; border-radius: 24px; background: #ffffffef; }
 .level-game__result-stars { font-size: 38px; }
 .level-game__result-banner { position: relative; isolation: isolate; min-width: 80%; padding: 7px 20px; border: 2px solid #e17d18; border-radius: 8px; background: linear-gradient(#ffdc52,#f4a01b); font-size: 22px; }
+.level-game__result-banner--game-over { border-color: #bd4d44; background: linear-gradient(#ff9a79,#e65b54); }
+.level-game__game-over-message { margin: 0; color: #355b83; font-size: 15px; line-height: 1.4; }
 .level-game__result-banner::before,.level-game__result-banner::after { position: absolute; top: 7px; z-index: -1; width: 24px; height: 32px; background: #bc651a; content: ''; }
 .level-game__result-banner::before { left: -15px; transform: skewY(22deg); }
 .level-game__result-banner::after { right: -15px; transform: skewY(-22deg); }
@@ -1139,14 +1154,19 @@
 }
 
 @media (max-height: 680px) {
-  .level-intro { gap: 8px; padding-top: 8px; }
-  .level-intro__card { padding: 12px; }
-  .level-intro__hero { min-height: 90px; }
-  .level-intro__hero .explorer-character { height: min(25svh,170px); max-height: 170px; }
-  .level-intro__start { min-height: 52px; }
+  .level-intro { gap: 4px; padding-top: 6px; }
+  .level-intro__title { min-height: 64px; }
+  .level-intro__title img { max-height: 86px; }
+  .level-intro__card { padding: 8px 11px; }
+  .level-intro__card h2 { margin-top: 5px; }
+  .level-intro__targets { margin-top: 4px; }
+  .level-intro__stars { font-size: 27px; }
+  .level-intro__facts { min-height: 42px; }
+  .level-intro__hero { min-height: 34px; }
+  .level-intro__hero .explorer-character { height: min(12svh,90px); max-height: 90px; }
+  .level-intro__start { min-height: 48px; }
   .level-game--adventure { gap: 5px; padding-top: 6px; }
   .level-game__scene { min-height: 140px; }
   .level-game__controls { min-height: 66px; }
   .level-game__controls button { width: 54px; height: 54px; }
 }
-
