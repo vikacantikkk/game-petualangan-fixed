@@ -197,6 +197,30 @@ function playAnswerSound(correct: boolean) {
   })
 }
 
+function playGameplaySound(frequencies: number[], waveform: OscillatorType = 'triangle') {
+  const AudioContextConstructor = window.AudioContext
+  if (!AudioContextConstructor) return
+
+  const audio = new AudioContextConstructor()
+  const startTime = audio.currentTime
+  const volume = audio.createGain()
+  volume.gain.setValueAtTime(0.0001, startTime)
+  volume.gain.exponentialRampToValueAtTime(0.1, startTime + 0.015)
+  volume.gain.exponentialRampToValueAtTime(0.0001, startTime + 0.34)
+  volume.connect(audio.destination)
+
+  frequencies.forEach((frequency, index) => {
+    const tone = audio.createOscillator()
+    const toneStart = startTime + index * 0.075
+    tone.type = waveform
+    tone.frequency.setValueAtTime(frequency, toneStart)
+    tone.connect(volume)
+    tone.start(toneStart)
+    tone.stop(toneStart + 0.19)
+    if (index === frequencies.length - 1) tone.onended = () => { void audio.close() }
+  })
+}
+
 function LevelGame({ level, onBack, onComplete }: LevelGameProps) {
   const stage = levels[Math.min(Math.max(level, 1), levels.length) - 1]
   const challenges = stage.questions
@@ -229,6 +253,7 @@ function LevelGame({ level, onBack, onComplete }: LevelGameProps) {
   const coinCount = collectedCount * 5 + correctAnswers * 10
 
   function loseLife(message: string) {
+    playGameplaySound([420, 310, 190], 'sawtooth')
     const remainingLives = lives - 1
     setLives(remainingLives)
     setStatus(message)
@@ -257,7 +282,10 @@ function LevelGame({ level, onBack, onComplete }: LevelGameProps) {
     }
     window.setTimeout(() => {
       setWalking(false)
-      if (nextStep === challenges.length) setAtObstacle(true)
+      if (nextStep === challenges.length) {
+        setAtObstacle(true)
+        playGameplaySound([523, 659, 784])
+      }
     }, WALK_DURATION)
   }
 
@@ -274,6 +302,7 @@ function LevelGame({ level, onBack, onComplete }: LevelGameProps) {
 
   function jump() {
     if (paused || finished || gameOver || atObstacle || jumping || walking) return
+    playGameplaySound([440, 587, 784])
     setJumping(true)
     setJumpReady(true)
     setStatus('Lompatan siap! Tekan → untuk mendarat dan mengambil bentuk.')
