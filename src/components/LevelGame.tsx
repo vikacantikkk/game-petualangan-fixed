@@ -246,9 +246,12 @@ function LevelGame({ level, onBack, onComplete }: LevelGameProps) {
   const progressCount = atObstacle ? stage.targets.length + challengeIndex : collectedCount
   const totalProgress = stage.targets.length + challenges.length
   const questionProgress = Math.round((progressCount / totalProgress) * 100)
-  const obstaclePositions = [[20, 20], [50, 42], [78, 26]]
-  const heroPositions = [8, 20, 50, 83]
-  const heroHeights = [12, 20, 42, 43]
+  const obstaclePositions: [number, number][] = [[20, 20], [50, 42], [78, 26]]
+  const obstacleHeights = [86, 98, 82]
+  const heroPositions = [8, ...obstaclePositions.map(([left]) => left)]
+  const heroBottom = heroStep === 0
+    ? '12%'
+    : `calc(${obstaclePositions[heroStep - 1][1]}% + ${obstacleHeights[heroStep - 1] / 2}px)`
   const earnedStars = Math.min(3, Math.ceil(score / 200))
   const coinCount = collectedCount * 5 + correctAnswers * 10
 
@@ -268,7 +271,7 @@ function LevelGame({ level, onBack, onComplete }: LevelGameProps) {
       return
     }
 
-    const nextStep = Math.min(challenges.length, heroStep + 1)
+    const nextStep = Math.min(stage.targets.length, heroStep + 1)
     if (nextStep === heroStep) return
     setDirection('right')
     setWalking(true)
@@ -282,7 +285,7 @@ function LevelGame({ level, onBack, onComplete }: LevelGameProps) {
     }
     window.setTimeout(() => {
       setWalking(false)
-      if (nextStep === challenges.length) {
+      if (nextStep === stage.targets.length) {
         setAtObstacle(true)
         playGameplaySound([523, 659, 784])
       }
@@ -420,8 +423,8 @@ function LevelGame({ level, onBack, onComplete }: LevelGameProps) {
             <path d="M 18 82 Q 27 70 36 56 Q 46 58 55 76 Q 64 63 73 49 Q 79 48 84 67" />
           </svg>
           <div className="level-game__course-coins" aria-hidden="true">
-            {[[31, 40], [55, 76], [78, 57]].map(([left, bottom], index) => (
-              <i className={index < collectedCount ? 'is-collected' : ''} key={index} style={{ left: `${left}%`, bottom: `${bottom}%` }}>🪙</i>
+            {obstaclePositions.map(([left, bottom], index) => (
+              <i className={index < collectedCount ? 'is-collected' : ''} key={index} style={{ left: `${left}%`, bottom: `calc(${bottom}% + ${obstacleHeights[index] / 2 + 20}px)` }}>🪙</i>
             ))}
           </div>
           <div className="level-game__course-flag" style={{ left: '91%', bottom: '43%' }} aria-label="Tujuan: gerbang soal">
@@ -436,7 +439,6 @@ function LevelGame({ level, onBack, onComplete }: LevelGameProps) {
             >
               <img className="level-game__obstacle-island" src={obstacleIslandAssets[index % obstacleIslandAssets.length]} alt="" aria-hidden="true" />
               <span className="level-game__obstacle-shape">{index < collectedCount ? '✓' : target.symbol}</span>
-              {index >= collectedCount && <b className="level-game__obstacle-coin" aria-hidden="true">🪙</b>}
               <small aria-label={target.name}>{index + 1}</small>
             </div>
           ))}
@@ -444,7 +446,7 @@ function LevelGame({ level, onBack, onComplete }: LevelGameProps) {
         </div>
         <div
           className={`level-game__hero${jumping ? ' is-jumping' : ''}${walking ? ' is-walking' : ''}`}
-          style={{ left: `${heroPositions[Math.min(heroStep, 5)]}%`, bottom: `${heroHeights[Math.min(heroStep, 5)]}%` }}
+          style={{ left: `${heroPositions[Math.min(heroStep, stage.targets.length)]}%`, bottom: heroBottom }}
         >
           <HeroSprite direction={direction} walking={walking} jumping={jumping} />
         </div>

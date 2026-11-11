@@ -9,7 +9,7 @@ import LevelIntro from './components/LevelIntro'
 import OtherScreens from './components/OtherScreens'
 
 type SavedProgress = { unlockedLevel: number; completedLevels: number[]; stars: number }
-const progressKey = 'petualangan-bangun-datar-pulau-bentuk-v2'
+const progressKey = 'petualangan-bangun-datar-pulau-bentuk-v3'
 
 function readProgress(): SavedProgress {
   try {
@@ -17,7 +17,7 @@ function readProgress(): SavedProgress {
     if (saved && Array.isArray(saved.completedLevels)) {
       const completedLevels = [...new Set(saved.completedLevels.filter((level) => Number.isInteger(level) && level >= 1 && level <= 3))]
       return {
-        unlockedLevel: Math.min(3, Math.max(1, Number(saved.unlockedLevel) || 1)),
+        unlockedLevel: completedLevels.includes(2) ? 3 : 2,
         completedLevels,
         stars: Math.max(0, Number(saved.stars) || completedLevels.length),
       }
@@ -25,7 +25,7 @@ function readProgress(): SavedProgress {
   } catch {
     // Mulai dari progres baru jika data tersimpan tidak dapat dibaca.
   }
-  return { unlockedLevel: 1, completedLevels: [], stars: 0 }
+  return { unlockedLevel: 2, completedLevels: [], stars: 0 }
 }
 
 function App() {
