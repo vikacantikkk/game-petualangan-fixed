@@ -5,63 +5,225 @@ import obstacleIslandA from '../assets/obstacle-platform-wide.png'
 import obstacleIslandB from '../assets/obstacle-platform-small.png'
 
 type Question = {
-  topic: string
   symbol: string
   prompt: string
   options: string[]
   answer: string
   explanation: string
+  illustration?: 'clock' | 'house' | 'tile' | 'door' | 'bicycle'
+}
+
+function QuestionIllustration({ type }: { type: NonNullable<Question['illustration']> }) {
+  if (type === 'clock') {
+    return (
+      <svg viewBox="0 0 160 140" role="img" aria-label="Ilustrasi jam dinding bulat">
+        <path d="M66 14h28v12H66z" fill="#9b5b2b" />
+        <circle cx="80" cy="76" r="52" fill="#f29a42" />
+        <circle cx="80" cy="76" r="43" fill="#fff9dc" stroke="#fff" strokeWidth="4" />
+        <path d="M80 42v35l24 14" fill="none" stroke="#315b7e" strokeLinecap="round" strokeLinejoin="round" strokeWidth="6" />
+        <circle cx="80" cy="76" r="5" fill="#ef8052" />
+        <path d="M80 39v5m0 64v5m-37-37h5m64 0h5m-63-26 4 4m45 45 4 4m0-53-4 4m-45 45-4 4" stroke="#d88638" strokeLinecap="round" strokeWidth="3" />
+      </svg>
+    )
+  }
+
+  if (type === 'house') {
+    return (
+      <svg viewBox="0 0 180 140" role="img" aria-label="Ilustrasi rumah dengan atap segitiga">
+        <path d="M26 69 90 18l64 51v12H26z" fill="#ec7543" stroke="#b94e36" strokeLinejoin="round" strokeWidth="5" />
+        <path d="M42 70h96v57H42z" fill="#ffe2a1" stroke="#c78546" strokeWidth="4" />
+        <path d="M76 91h28v36H76z" fill="#78b8d5" stroke="#fff" strokeWidth="4" />
+        <path d="M90 93v32m-12-17h28" stroke="#fff" strokeWidth="3" />
+        <path d="M90 19v-8" stroke="#b94e36" strokeLinecap="round" strokeWidth="5" />
+      </svg>
+    )
+  }
+
+  if (type === 'tile') {
+    return (
+      <svg viewBox="0 0 150 140" role="img" aria-label="Ilustrasi ubin persegi">
+        <path d="M75 15 133 45v62l-58 24-58-24V45z" fill="#67b780" stroke="#287d58" strokeLinejoin="round" strokeWidth="5" />
+        <path d="M75 15v59m58-29L75 74 17 45m58 29v58" fill="none" stroke="#d8f4cf" strokeLinejoin="round" strokeWidth="4" />
+        <path d="m75 34 39 20v40l-39 16-39-16V54z" fill="#98d498" stroke="#e9ffe0" strokeWidth="3" />
+      </svg>
+    )
+  }
+
+  if (type === 'door') {
+    return (
+      <svg viewBox="0 0 150 150" role="img" aria-label="Ilustrasi pintu berbentuk persegi panjang">
+        <path d="M32 17h86v121H32z" fill="#a96c3e" stroke="#75472d" strokeWidth="5" />
+        <path d="M43 28h64v110H43z" fill="#d99a58" stroke="#f3c27b" strokeWidth="4" />
+        <path d="M52 39h46v87H52z" fill="#c78349" stroke="#edba75" strokeWidth="3" />
+        <circle cx="91" cy="84" r="4" fill="#ffe281" />
+      </svg>
+    )
+  }
+
+  return (
+    <svg viewBox="0 0 220 140" role="img" aria-label="Ilustrasi roda sepeda berbentuk lingkaran">
+      <circle cx="48" cy="91" r="36" fill="#eaf7ff" stroke="#347ca4" strokeWidth="6" />
+      <circle cx="172" cy="91" r="36" fill="#eaf7ff" stroke="#347ca4" strokeWidth="6" />
+      <path d="m48 91 45-52 40 52H48l36-38 49 38m-40-52 21 52" fill="none" stroke="#ec7850" strokeLinejoin="round" strokeWidth="6" />
+      <path d="M84 39h20m29 52h18m-107 0h-8" stroke="#315b7e" strokeLinecap="round" strokeWidth="6" />
+      <circle cx="48" cy="91" r="6" fill="#ec7850" />
+      <circle cx="172" cy="91" r="6" fill="#ec7850" />
+    </svg>
+  )
+}
+
+type LevelStage = {
+  title: string
+  phase: string
+  outcome: string
+  mission: string
+  targets: { name: string; symbol: string }[]
+  questions: Question[]
 }
 
 type LevelGameProps = {
   level: number
-  completed: boolean
   onBack: () => void
   onComplete: (level: number) => void
 }
 
-const questions: Question[] = [
-  { topic: 'Pulau Bentuk', symbol: '□', prompt: 'Berapa banyak sisi yang dimiliki persegi?', options: ['3 sisi', '4 sisi', '5 sisi', '6 sisi'], answer: '4 sisi', explanation: 'Persegi mempunyai empat sisi yang sama panjang.' },
-  { topic: 'Pulau Bentuk', symbol: '△', prompt: 'Bangun datar apa yang mempunyai tiga sisi?', options: ['Lingkaran', 'Persegi', 'Segitiga', 'Persegi panjang'], answer: 'Segitiga', explanation: 'Segitiga selalu mempunyai tiga sisi dan tiga sudut.' },
-  { topic: 'Pulau Bentuk', symbol: '○', prompt: 'Apa yang benar tentang lingkaran?', options: ['Memiliki 3 sudut', 'Memiliki 4 sisi', 'Tidak memiliki sudut', 'Memiliki 5 sisi'], answer: 'Tidak memiliki sudut', explanation: 'Lingkaran berbentuk lengkung dan tidak memiliki titik sudut.' },
-  { topic: 'Pulau Bentuk', symbol: '▭', prompt: 'Persegi panjang memiliki ... pasang sisi berhadapan yang sama panjang.', options: ['1', '2', '3', '4'], answer: '2', explanation: 'Kedua pasang sisi yang berhadapan pada persegi panjang sama panjang.' },
-  { topic: 'Pulau Bentuk', symbol: '◇', prompt: 'Ciri utama persegi adalah ...', options: ['Semua sisinya sama panjang', 'Tidak punya sudut', 'Hanya punya 3 sisi', 'Sisinya melengkung'], answer: 'Semua sisinya sama panjang', explanation: 'Keempat sisi persegi sama panjang dan semua sudutnya siku-siku.' },
-  { topic: 'Pulau Bentuk', symbol: '△', prompt: 'Jumlah besar sudut dalam sebuah segitiga adalah ...', options: ['90°', '180°', '270°', '360°'], answer: '180°', explanation: 'Jika dijumlahkan, tiga sudut dalam segitiga selalu 180°.' },
-  { topic: 'Hutan Segi Empat', symbol: '▱', prompt: 'Bangun segi empat memiliki berapa sisi?', options: ['3', '4', '5', '6'], answer: '4', explanation: 'Segi empat adalah bangun datar yang mempunyai empat sisi.' },
-  { topic: 'Hutan Segi Empat', symbol: '▱', prompt: 'Pada jajar genjang, sisi yang berhadapan selalu ...', options: ['Melengkung', 'Sejajar', 'Tegak lurus', 'Berbeda panjang'], answer: 'Sejajar', explanation: 'Jajar genjang memiliki dua pasang sisi berhadapan yang sejajar.' },
-  { topic: 'Hutan Segi Empat', symbol: '◇', prompt: 'Belah ketupat memiliki ...', options: ['Empat sisi sama panjang', 'Tiga sisi sama panjang', 'Satu sisi lengkung', 'Lima sudut'], answer: 'Empat sisi sama panjang', explanation: 'Keempat sisi belah ketupat memiliki panjang yang sama.' },
-  { topic: 'Hutan Segi Empat', symbol: '⏢', prompt: 'Trapesium memiliki paling sedikit ... pasang sisi sejajar.', options: ['Tidak ada', 'Satu', 'Dua', 'Tiga'], answer: 'Satu', explanation: 'Trapesium memiliki satu pasang sisi sejajar.' },
-  { topic: 'Hutan Segi Empat', symbol: '▭', prompt: 'Persegi panjang berukuran 8 cm × 4 cm. Berapa kelilingnya?', options: ['12 cm', '24 cm', '32 cm', '48 cm'], answer: '24 cm', explanation: 'Keliling = 2 × (8 + 4) = 24 cm.' },
-  { topic: 'Hutan Segi Empat', symbol: '□', prompt: 'Persegi memiliki sisi 5 cm. Berapa kelilingnya?', options: ['10 cm', '15 cm', '20 cm', '25 cm'], answer: '20 cm', explanation: 'Keliling persegi = 4 × sisi = 4 × 5 = 20 cm.' },
-  { topic: 'Pegunungan Segitiga', symbol: '△', prompt: 'Setiap sudut pada segitiga sama sisi besarnya ...', options: ['30°', '45°', '60°', '90°'], answer: '60°', explanation: 'Tiga sudut sama besar dan jumlahnya 180°, jadi setiap sudut 60°.' },
-  { topic: 'Pegunungan Segitiga', symbol: '△', prompt: 'Segitiga sama kaki memiliki ...', options: ['Dua sisi sama panjang', 'Tiga sudut siku-siku', 'Empat sisi', 'Satu sisi lengkung'], answer: 'Dua sisi sama panjang', explanation: 'Segitiga sama kaki memiliki sepasang sisi yang sama panjang.' },
-  { topic: 'Pegunungan Segitiga', symbol: '◿', prompt: 'Segitiga siku-siku selalu memiliki satu sudut sebesar ...', options: ['45°', '60°', '90°', '180°'], answer: '90°', explanation: 'Sudut siku-siku besarnya tepat 90°.' },
-  { topic: 'Pegunungan Segitiga', symbol: '△', prompt: 'Segitiga memiliki alas 6 cm dan tinggi 4 cm. Berapa luasnya?', options: ['10 cm²', '12 cm²', '20 cm²', '24 cm²'], answer: '12 cm²', explanation: 'Luas segitiga = ½ × alas × tinggi = ½ × 6 × 4 = 12 cm².' },
-  { topic: 'Pegunungan Segitiga', symbol: '▭', prompt: 'Berapa luas persegi panjang dengan panjang 8 cm dan lebar 5 cm?', options: ['13 cm²', '26 cm²', '40 cm²', '80 cm²'], answer: '40 cm²', explanation: 'Luas persegi panjang = panjang × lebar = 8 × 5 = 40 cm².' },
-  { topic: 'Pegunungan Segitiga', symbol: '□', prompt: 'Sisi persegi 6 cm. Berapa luasnya?', options: ['12 cm²', '24 cm²', '30 cm²', '36 cm²'], answer: '36 cm²', explanation: 'Luas persegi = sisi × sisi = 6 × 6 = 36 cm².' },
-  { topic: 'Danau Lingkaran', symbol: '○', prompt: 'Jari-jari lingkaran 7 cm. Berapa diameternya?', options: ['3,5 cm', '7 cm', '14 cm', '21 cm'], answer: '14 cm', explanation: 'Diameter = 2 × jari-jari = 2 × 7 = 14 cm.' },
-  { topic: 'Danau Lingkaran', symbol: '◉', prompt: 'Diameter sebuah lingkaran 12 cm. Jari-jarinya adalah ...', options: ['3 cm', '6 cm', '12 cm', '24 cm'], answer: '6 cm', explanation: 'Jari-jari adalah setengah diameter, jadi 12 ÷ 2 = 6 cm.' },
-  { topic: 'Danau Lingkaran', symbol: '○', prompt: 'Rumus luas lingkaran adalah ...', options: ['π × r', '2 × π × r', 'π × r × r', '4 × sisi'], answer: 'π × r × r', explanation: 'Luas lingkaran dihitung dengan rumus π × jari-jari × jari-jari.' },
-  { topic: 'Danau Lingkaran', symbol: '◉', prompt: 'Keliling lingkaran dengan jari-jari 7 cm adalah ... (π = 22/7)', options: ['22 cm', '44 cm', '77 cm', '154 cm'], answer: '44 cm', explanation: 'Keliling = 2 × π × r = 2 × 22/7 × 7 = 44 cm.' },
-  { topic: 'Danau Lingkaran', symbol: '⬡', prompt: 'Bangun beraturan memiliki ...', options: ['Sisi dan sudut yang sama besar', 'Hanya sisi lengkung', 'Tiga sisi saja', 'Tidak memiliki sudut'], answer: 'Sisi dan sudut yang sama besar', explanation: 'Pada bangun beraturan, semua sisi dan semua sudutnya sama.' },
-  { topic: 'Danau Lingkaran', symbol: '▱', prompt: 'Cara mencari keliling bangun datar adalah ...', options: ['Menjumlahkan panjang semua sisi', 'Mengalikan semua sudut', 'Membagi luas dengan sisi', 'Menghitung jumlah warna'], answer: 'Menjumlahkan panjang semua sisi', explanation: 'Keliling adalah total panjang seluruh sisi di sekeliling bangun.' },
-  { topic: 'Kastil Geometri', symbol: '⬠', prompt: 'Bangun datar yang memiliki lima sisi disebut ...', options: ['Segitiga', 'Segi empat', 'Segi lima', 'Segi enam'], answer: 'Segi lima', explanation: 'Awalan penta berarti lima; segi lima memiliki lima sisi.' },
-  { topic: 'Kastil Geometri', symbol: '◇', prompt: 'Jumlah sudut dalam segi empat adalah ...', options: ['180°', '270°', '360°', '540°'], answer: '360°', explanation: 'Jumlah keempat sudut dalam semua segi empat adalah 360°.' },
-  { topic: 'Kastil Geometri', symbol: '⬡', prompt: 'Berapa banyak sisi yang dimiliki segi enam?', options: ['5 sisi', '6 sisi', '7 sisi', '8 sisi'], answer: '6 sisi', explanation: 'Segi enam memiliki enam sisi dan enam titik sudut.' },
-  { topic: 'Kastil Geometri', symbol: '∠', prompt: 'Sudut lancip besarnya ...', options: ['Kurang dari 90°', 'Tepat 90°', 'Lebih dari 90°', 'Tepat 180°'], answer: 'Kurang dari 90°', explanation: 'Sudut lancip lebih kecil dari sudut siku-siku (90°).' },
-  { topic: 'Kastil Geometri', symbol: '▭', prompt: 'Persegi panjang panjangnya 12 cm dan lebarnya 7 cm. Kelilingnya ...', options: ['19 cm', '26 cm', '38 cm', '84 cm'], answer: '38 cm', explanation: 'Keliling = 2 × (12 + 7) = 38 cm.' },
-  { topic: 'Kastil Geometri', symbol: '△', prompt: 'Sebuah segitiga memiliki sisi 5 cm, 6 cm, dan 7 cm. Kelilingnya ...', options: ['11 cm', '18 cm', '30 cm', '42 cm'], answer: '18 cm', explanation: 'Keliling segitiga = 5 + 6 + 7 = 18 cm.' },
+const levels: LevelStage[] = [
+  {
+    title: 'Gerbang Pulau Bentuk',
+    phase: 'Pengenalan',
+    outcome: 'Mengenali segitiga, persegi, dan lingkaran dari tampilannya.',
+    mission: 'Temukan 1 segitiga, 1 persegi, dan 1 lingkaran yang tersebar di pulau.',
+    targets: [
+      { name: 'Segitiga', symbol: '△' },
+      { name: 'Persegi', symbol: '□' },
+      { name: 'Lingkaran', symbol: '○' },
+    ],
+    questions: [
+      { symbol: '△', prompt: 'Manakah gambar yang berbentuk segitiga?', options: ['○ Lingkaran', '△ Segitiga', '□ Persegi', '▭ Persegi panjang'], answer: '△ Segitiga', explanation: 'Segitiga memiliki tiga sisi dan tiga titik sudut.' },
+      { symbol: '○', prompt: 'Bangun datar manakah yang berbentuk bulat?', options: ['△ Segitiga', '□ Persegi', '○ Lingkaran', '▭ Persegi panjang'], answer: '○ Lingkaran', explanation: 'Lingkaran berbentuk bulat dan tidak memiliki sisi lurus.' },
+      { symbol: '□', prompt: 'Pilih gambar yang merupakan persegi.', options: ['○ Lingkaran', '△ Segitiga', '□ Persegi', '▭ Persegi panjang'], answer: '□ Persegi', explanation: 'Persegi memiliki empat sisi yang sama panjang.' },
+      { symbol: '△', prompt: 'Bentuk apa yang memiliki tiga sisi?', options: ['Lingkaran', 'Persegi', 'Segitiga', 'Persegi panjang'], answer: 'Segitiga', explanation: 'Segitiga mempunyai tiga sisi.' },
+      { symbol: '□', prompt: 'Bangun datar apa yang memiliki empat sisi sama panjang?', options: ['Persegi panjang', 'Persegi', 'Segitiga', 'Lingkaran'], answer: 'Persegi', explanation: 'Keempat sisi persegi sama panjang.' },
+    ],
+  },
+  {
+    title: 'Lembah Bentuk',
+    phase: 'Pemahaman',
+    outcome: 'Menyebutkan jumlah sisi dan titik sudut pada bangun datar sederhana.',
+    mission: 'Kumpulkan bentuk dengan ciri berbeda: sisi, sudut, dan bentuk tanpa sudut.',
+    targets: [
+      { name: '3 sisi', symbol: '△' },
+      { name: '4 sisi', symbol: '□' },
+      { name: 'Titik sudut', symbol: '•' },
+    ],
+    questions: [
+      { symbol: '△', prompt: 'Berapa jumlah sisi pada segitiga?', options: ['2 sisi', '3 sisi', '4 sisi', '5 sisi'], answer: '3 sisi', explanation: 'Segitiga mempunyai tiga sisi.' },
+      { symbol: '□', prompt: 'Berapa jumlah titik sudut pada persegi?', options: ['2 titik sudut', '3 titik sudut', '4 titik sudut', 'Tidak ada'], answer: '4 titik sudut', explanation: 'Persegi mempunyai empat titik sudut.' },
+      { symbol: '○', prompt: 'Berapa jumlah titik sudut pada lingkaran?', options: ['0 titik sudut', '1 titik sudut', '3 titik sudut', '4 titik sudut'], answer: '0 titik sudut', explanation: 'Lingkaran tidak memiliki titik sudut.' },
+      { symbol: '▱', prompt: 'Bangun datar apa yang memiliki empat sisi?', options: ['Lingkaran', 'Segitiga', 'Segi empat', 'Segi lima'], answer: 'Segi empat', explanation: 'Segi empat mempunyai empat sisi.' },
+      { symbol: '○', prompt: 'Bangun datar apa yang tidak memiliki titik sudut?', options: ['Persegi', 'Segitiga', 'Persegi panjang', 'Lingkaran'], answer: 'Lingkaran', explanation: 'Lingkaran tidak memiliki titik sudut.' },
+    ],
+  },
+  {
+    title: 'Hutan Bentuk',
+    phase: 'Penerapan',
+    outcome: 'Mengidentifikasi bangun datar pada benda-benda sehari-hari.',
+    mission: 'Cari objek di hutan: jam, atap rumah, dan ubin dengan bentuk yang sesuai.',
+    targets: [
+      { name: 'Jam', symbol: '◷' },
+      { name: 'Atap rumah', symbol: '⌂' },
+      { name: 'Ubin', symbol: '▧' },
+    ],
+    questions: [
+      { symbol: '◷', illustration: 'clock', prompt: 'Jam dinding berbentuk bulat menyerupai bangun datar apa?', options: ['Segitiga', 'Persegi', 'Lingkaran', 'Persegi panjang'], answer: 'Lingkaran', explanation: 'Bentuk jam dinding menyerupai lingkaran.' },
+      { symbol: '⌂', illustration: 'house', prompt: 'Atap rumah pada gambar menyerupai bentuk apa?', options: ['Lingkaran', 'Segitiga', 'Persegi', 'Persegi panjang'], answer: 'Segitiga', explanation: 'Bagian atap rumah pada gambar menyerupai segitiga.' },
+      { symbol: '▧', illustration: 'tile', prompt: 'Ubin dengan empat sisi sama panjang menyerupai apa?', options: ['Lingkaran', 'Segitiga', 'Persegi', 'Persegi panjang'], answer: 'Persegi', explanation: 'Ubin dengan empat sisi sama panjang menyerupai persegi.' },
+      { symbol: '▭', illustration: 'door', prompt: 'Pintu berbentuk persegi panjang memiliki berapa sisi?', options: ['2 sisi', '3 sisi', '4 sisi', '5 sisi'], answer: '4 sisi', explanation: 'Persegi panjang memiliki empat sisi.' },
+      { symbol: '○', illustration: 'bicycle', prompt: 'Roda sepeda jika dilihat dari samping berbentuk apa?', options: ['Segitiga', 'Persegi', 'Lingkaran', 'Persegi panjang'], answer: 'Lingkaran', explanation: 'Roda berbentuk lingkaran jika dilihat dari samping.' },
+    ],
+  },
 ]
 
-const WALK_DURATION = 720
+const WALK_DURATION = 560
 const JUMP_DURATION = 760
 const obstacleIslandAssets = [obstacleIslandA, obstacleIslandB]
 
-function LevelGame({ level, completed, onBack, onComplete }: LevelGameProps) {
-  const firstQuestion = level - 1
-  const topicStart = Math.floor(firstQuestion / 6) * 6
-  const offset = firstQuestion - topicStart
-  const challenges = Array.from({ length: 5 }, (_, index) => questions[topicStart + ((offset + index) % 6)])
+function playCoinSound() {
+  const AudioContextConstructor = window.AudioContext
+  if (!AudioContextConstructor) return
+
+  const audio = new AudioContextConstructor()
+  const startTime = audio.currentTime
+  const volume = audio.createGain()
+  volume.gain.setValueAtTime(0.0001, startTime)
+  volume.gain.exponentialRampToValueAtTime(0.16, startTime + 0.015)
+  volume.gain.exponentialRampToValueAtTime(0.0001, startTime + 0.32)
+  volume.connect(audio.destination)
+
+  ;[880, 1320].forEach((frequency, index) => {
+    const tone = audio.createOscillator()
+    const toneStart = startTime + index * 0.085
+    tone.type = 'sine'
+    tone.frequency.setValueAtTime(frequency, toneStart)
+    tone.connect(volume)
+    tone.start(toneStart)
+    tone.stop(toneStart + 0.18)
+    if (index === 1) tone.onended = () => { void audio.close() }
+  })
+}
+
+function playAnswerSound(correct: boolean) {
+  const AudioContextConstructor = window.AudioContext
+  if (!AudioContextConstructor) return
+
+  const audio = new AudioContextConstructor()
+  const startTime = audio.currentTime
+  const volume = audio.createGain()
+  const notes = correct ? [660, 880] : [280, 220]
+  volume.gain.setValueAtTime(0.0001, startTime)
+  volume.gain.exponentialRampToValueAtTime(0.12, startTime + 0.015)
+  volume.gain.exponentialRampToValueAtTime(0.0001, startTime + 0.28)
+  volume.connect(audio.destination)
+
+  notes.forEach((frequency, index) => {
+    const tone = audio.createOscillator()
+    const toneStart = startTime + index * 0.09
+    tone.type = correct ? 'sine' : 'triangle'
+    tone.frequency.setValueAtTime(frequency, toneStart)
+    tone.connect(volume)
+    tone.start(toneStart)
+    tone.stop(toneStart + 0.16)
+    if (index === notes.length - 1) tone.onended = () => { void audio.close() }
+  })
+}
+
+function playGameplaySound(frequencies: number[], waveform: OscillatorType = 'triangle') {
+  const AudioContextConstructor = window.AudioContext
+  if (!AudioContextConstructor) return
+
+  const audio = new AudioContextConstructor()
+  const startTime = audio.currentTime
+  const volume = audio.createGain()
+  volume.gain.setValueAtTime(0.0001, startTime)
+  volume.gain.exponentialRampToValueAtTime(0.1, startTime + 0.015)
+  volume.gain.exponentialRampToValueAtTime(0.0001, startTime + 0.34)
+  volume.connect(audio.destination)
+
+  frequencies.forEach((frequency, index) => {
+    const tone = audio.createOscillator()
+    const toneStart = startTime + index * 0.075
+    tone.type = waveform
+    tone.frequency.setValueAtTime(frequency, toneStart)
+    tone.connect(volume)
+    tone.start(toneStart)
+    tone.stop(toneStart + 0.19)
+    if (index === frequencies.length - 1) tone.onended = () => { void audio.close() }
+  })
+}
+
+function LevelGame({ level, onBack, onComplete }: LevelGameProps) {
+  const stage = levels[Math.min(Math.max(level, 1), levels.length) - 1]
+  const challenges = stage.questions
   const [challengeIndex, setChallengeIndex] = useState(0)
   const [heroStep, setHeroStep] = useState(0)
   const [atObstacle, setAtObstacle] = useState(false)
@@ -69,66 +231,103 @@ function LevelGame({ level, completed, onBack, onComplete }: LevelGameProps) {
   const [feedback, setFeedback] = useState<'correct' | 'wrong' | ''>('')
   const [mistakes, setMistakes] = useState(0)
   const [score, setScore] = useState(0)
+  const [lives, setLives] = useState(3)
+  const [collectedCount, setCollectedCount] = useState(0)
+  const [correctAnswers, setCorrectAnswers] = useState(0)
   const [jumping, setJumping] = useState(false)
+  const [jumpReady, setJumpReady] = useState(false)
   const [walking, setWalking] = useState(false)
   const [direction, setDirection] = useState<'left' | 'right'>('right')
   const [paused, setPaused] = useState(false)
   const [finished, setFinished] = useState(false)
+  const [gameOver, setGameOver] = useState(false)
+  const [status, setStatus] = useState('')
   const question = challenges[challengeIndex]
-  const progressCount = atObstacle ? challengeIndex + 1 : challengeIndex
-  const questionProgress = Math.round((progressCount / challenges.length) * 100)
-  const obstaclePositions = [[18, 18], [36, 44], [55, 24], [73, 51], [84, 33]]
-  const heroPositions = [8, 18, 36, 55, 73, 84]
-  const heroHeights = [12, 18, 44, 24, 51, 33]
+  const progressCount = atObstacle ? stage.targets.length + challengeIndex : collectedCount
+  const totalProgress = stage.targets.length + challenges.length
+  const questionProgress = Math.round((progressCount / totalProgress) * 100)
+  const obstaclePositions: [number, number][] = [[20, 20], [50, 42], [78, 26]]
+  const obstacleHeights = [86, 98, 82]
+  const heroPositions = [8, ...obstaclePositions.map(([left]) => left)]
+  const heroBottom = heroStep === 0
+    ? '12%'
+    : `calc(${obstaclePositions[heroStep - 1][1]}% + ${obstacleHeights[heroStep - 1] / 2}px)`
   const earnedStars = Math.min(3, Math.ceil(score / 200))
+  const coinCount = collectedCount * 5 + correctAnswers * 10
+
+  function loseLife(message: string) {
+    playGameplaySound([420, 310, 190], 'sawtooth')
+    const remainingLives = lives - 1
+    setLives(remainingLives)
+    setStatus(message)
+    if (remainingLives <= 0) setGameOver(true)
+  }
 
   function moveRight() {
-    if (paused || finished || feedback === 'correct' || atObstacle || walking) return
-    const nextStep = Math.min(challengeIndex + 1, heroStep + 1)
+    if (paused || finished || gameOver || atObstacle || walking) return
+    if (!jumpReady) {
+      loseLife('Aduh, kamu jatuh! Nyawa berkurang. Tekan lompat sebelum maju.')
+      setHeroStep(Math.max(0, heroStep - 1))
+      return
+    }
+
+    const nextStep = Math.min(stage.targets.length, heroStep + 1)
     if (nextStep === heroStep) return
-    const reachesObstacle = nextStep === challengeIndex + 1
     setDirection('right')
     setWalking(true)
     setHeroStep(nextStep)
-    setAtObstacle(false)
-    setSelected(null)
-    setFeedback('')
+    setJumpReady(false)
+    setStatus('')
+    if (nextStep > collectedCount) {
+      setCollectedCount(nextStep)
+      setScore((current) => current + 25)
+      playCoinSound()
+    }
     window.setTimeout(() => {
       setWalking(false)
-      if (reachesObstacle) setAtObstacle(true)
+      if (nextStep === stage.targets.length) {
+        setAtObstacle(true)
+        playGameplaySound([523, 659, 784])
+      }
     }, WALK_DURATION)
   }
 
   function moveLeft() {
-    if (paused || finished || feedback === 'correct' || walking) return
-    const nextStep = atObstacle ? challengeIndex : Math.max(0, heroStep - 1)
+    if (paused || finished || gameOver || atObstacle || walking || heroStep === 0) return
+    const nextStep = Math.max(0, heroStep - 1)
     setDirection('left')
     setWalking(true)
     setHeroStep(nextStep)
-    setAtObstacle(false)
-    setSelected(null)
-    setFeedback('')
+    setJumpReady(false)
+    setStatus('')
     window.setTimeout(() => setWalking(false), WALK_DURATION)
   }
 
   function jump() {
-    if (paused || finished || jumping || walking || feedback === 'correct') return
+    if (paused || finished || gameOver || atObstacle || jumping || walking) return
+    playGameplaySound([440, 587, 784])
     setJumping(true)
+    setJumpReady(true)
+    setStatus('Lompatan siap! Tekan → untuk mendarat dan mengambil bentuk.')
     window.setTimeout(() => setJumping(false), JUMP_DURATION)
-    if (!atObstacle) moveRight()
   }
 
   function answer(option: string) {
-    if (!atObstacle || feedback === 'correct') return
+    if (!atObstacle || feedback || gameOver) return
     setSelected(option)
     if (option !== question.answer) {
+      playAnswerSound(false)
       setMistakes((count) => count + 1)
       setFeedback('wrong')
+      setStatus(`Petunjuk: ${question.explanation}`)
       return
     }
 
+    playAnswerSound(true)
     setScore((current) => current + 100)
+    setCorrectAnswers((count) => count + 1)
     setFeedback('correct')
+    setStatus('')
     window.setTimeout(() => {
       if (challengeIndex === challenges.length - 1) {
         setFinished(true)
@@ -136,8 +335,6 @@ function LevelGame({ level, completed, onBack, onComplete }: LevelGameProps) {
       }
       const nextIndex = challengeIndex + 1
       setChallengeIndex(nextIndex)
-      setHeroStep(nextIndex)
-      setAtObstacle(false)
       setSelected(null)
       setFeedback('')
     }, 700)
@@ -151,11 +348,31 @@ function LevelGame({ level, completed, onBack, onComplete }: LevelGameProps) {
     setFeedback('')
     setMistakes(0)
     setScore(0)
+    setLives(3)
+    setCollectedCount(0)
+    setCorrectAnswers(0)
     setWalking(false)
     setJumping(false)
+    setJumpReady(false)
     setDirection('right')
     setFinished(false)
+    setGameOver(false)
     setPaused(false)
+    setStatus('')
+  }
+
+  if (gameOver) {
+    return (
+      <section className="level-game level-game--result" aria-label={`Permainan berakhir di level ${level}`}>
+        <div className="level-game__result-card">
+          <div className="level-game__result-banner level-game__result-banner--game-over">Permainan Berakhir</div>
+          <ExplorerCharacter />
+          <p className="level-game__game-over-message">Nyawamu habis. Coba lagi dan lanjutkan petualanganmu!</p>
+          <button className="level-game__continue" onClick={restart} type="button">↻ &nbsp;Ulangi level</button>
+          <button className="level-game__retry-level" onClick={onBack} type="button">Kembali ke detail level</button>
+        </div>
+      </section>
+    )
   }
 
   if (finished) {
@@ -168,12 +385,12 @@ function LevelGame({ level, completed, onBack, onComplete }: LevelGameProps) {
           <ExplorerCharacter />
           <div className="level-game__result-stats">
             <p><span>⭐ Skor</span><strong>{score}</strong></p>
-            <p><span>🪙 Koin</span><strong>{score + 60}</strong></p>
+            <p><span>🪙 Koin</span><strong>{coinCount}</strong></p>
             <p><span>✨ XP</span><strong>+100</strong></p>
-            <p><span>✅ Jawaban</span><strong>5 benar / 5</strong></p>
+            <p><span>✅ Jawaban</span><strong>{correctAnswers} benar / {challenges.length}</strong></p>
           </div>
           <button className="level-game__continue" onClick={() => onComplete(level)} type="button">
-            {completed ? 'Kembali ke Peta' : 'Lanjutkan'} <span>→</span>
+            {level < levels.length ? 'Lanjut ke level berikutnya' : 'Kembali ke Peta'} <span>→</span>
           </button>
           <button className="level-game__retry-level" onClick={restart} type="button">↻ &nbsp;Ulangi level</button>
         </div>
@@ -185,17 +402,18 @@ function LevelGame({ level, completed, onBack, onComplete }: LevelGameProps) {
     <section className="level-game level-game--adventure" aria-label={`Petualangan level ${level}`}>
       <header className="level-game__hud">
         <button className="level-game__pause" onClick={() => setPaused(true)} type="button" aria-label="Jeda permainan">Ⅱ</button>
-        <div className="level-game__hud-center"><span>⭐ {Math.floor(score / 100)}</span><strong>Level {level}</strong></div>
+        <div className="level-game__hud-center"><span>⭐ {score}</span><strong>Level {level}</strong></div>
         <div className="level-game__hud-right">
-          <span className="level-game__coins">🪙 {12 + Math.floor(score / 100)}</span>
+          <span className="level-game__coins">🪙 {coinCount}</span>
+          <span className="level-game__lives" aria-label={`${lives} nyawa tersisa`}>{'❤️'.repeat(lives)}</span>
           <div className="level-game__stars" aria-label={`${earnedStars} dari 3 bintang`}>
             {Array.from({ length: 3 }, (_, index) => <span className={index < earnedStars ? 'is-earned' : ''} key={index}>★</span>)}
           </div>
         </div>
       </header>
-      <div className="level-game__progress-row" aria-label={`Progres tantangan ${progressCount} dari ${challenges.length}`}>
+      <div className="level-game__progress-row" aria-label={`Progres petualangan ${progressCount} dari ${totalProgress}`}>
         <div className="level-game__progress"><i style={{ width: `${questionProgress}%` }} /></div>
-        <strong>{progressCount}/{challenges.length}</strong>
+        <strong>{progressCount}/{totalProgress}</strong>
       </div>
 
       <div className="level-game__scene">
@@ -205,48 +423,53 @@ function LevelGame({ level, completed, onBack, onComplete }: LevelGameProps) {
             <path d="M 18 82 Q 27 70 36 56 Q 46 58 55 76 Q 64 63 73 49 Q 79 48 84 67" />
           </svg>
           <div className="level-game__course-coins" aria-hidden="true">
-            {[[27, 31], [31, 40], [39, 48], [47, 45], [63, 39], [78, 57]].map(([left, bottom], index) => (
-              <i key={index} style={{ left: `${left}%`, bottom: `${bottom}%` }}>🪙</i>
+            {obstaclePositions.map(([left, bottom], index) => (
+              <i className={index < collectedCount ? 'is-collected' : ''} key={index} style={{ left: `${left}%`, bottom: `calc(${bottom}% + ${obstacleHeights[index] / 2 + 20}px)` }}>🪙</i>
             ))}
           </div>
-          <span className="level-game__course-flag" style={{ left: '88%', bottom: '43%' }} aria-hidden="true"><i /><b /></span>
+          <div className="level-game__course-flag" style={{ left: '91%', bottom: '43%' }} aria-label="Tujuan: gerbang soal">
+            <span>GERBANG SOAL</span><i /><b>⚑</b>
+          </div>
           <div className="level-game__course-obstacles">
-          {challenges.map((challenge, index) => (
+          {stage.targets.map((target, index) => (
             <div
-              className={`level-game__obstacle is-platform-${index + 1}${index < challengeIndex ? ' is-cleared' : ''}${index === challengeIndex && atObstacle ? ' is-active' : ''}`}
-              key={`${challenge.prompt}-${index}`}
+              className={`level-game__obstacle is-platform-${index + 1}${index < collectedCount ? ' is-cleared' : ''}${index === collectedCount && !atObstacle ? ' is-active' : ''}`}
+              key={target.name}
               style={{ left: `${obstaclePositions[index][0]}%`, bottom: `${obstaclePositions[index][1]}%` }}
             >
               <img className="level-game__obstacle-island" src={obstacleIslandAssets[index % obstacleIslandAssets.length]} alt="" aria-hidden="true" />
-              <span className="level-game__obstacle-shape">{index < challengeIndex ? '✓' : challenge.symbol}</span>
-              {[1, 3].includes(index) && <b className="level-game__obstacle-coin" aria-hidden="true">🪙</b>}
-              <small>{index + 1}</small>
+              <span className="level-game__obstacle-shape">{index < collectedCount ? '✓' : target.symbol}</span>
+              <small aria-label={target.name}>{index + 1}</small>
             </div>
           ))}
           </div>
         </div>
         <div
           className={`level-game__hero${jumping ? ' is-jumping' : ''}${walking ? ' is-walking' : ''}`}
-          style={{ left: `${heroPositions[Math.min(heroStep, 5)]}%`, bottom: `${heroHeights[Math.min(heroStep, 5)]}%` }}
+          style={{ left: `${heroPositions[Math.min(heroStep, stage.targets.length)]}%`, bottom: heroBottom }}
         >
           <HeroSprite direction={direction} walking={walking} jumping={jumping} />
         </div>
 
         {!atObstacle ? (
           <div className="level-game__collection-card" role="status">
-            <strong>Kumpulkan semua bentuk!</strong>
+            <strong>Kumpulkan semua bentuk dan koin!</strong>
             <div className="level-game__collection-progress">
-              <span className="is-triangle">△</span><span className="is-square">□</span><span className="is-circle">●</span>
-              <b>{challengeIndex}/{challenges.length}</b>
+              {stage.targets.map((target, index) => (
+                <span className={index < collectedCount ? 'is-collected' : ''} key={target.name} aria-label={target.name}>
+                  {index < collectedCount ? '✓' : target.symbol}
+                </span>
+              ))}
+              <b>{collectedCount}/{stage.targets.length}</b>
             </div>
-            <small>Tekan → untuk maju atau ↑ untuk melompat</small>
+            <small>{status || 'Tekan ↑ untuk melompat, lalu → untuk melewati celah.'}</small>
           </div>
         ) : (
           <article className="level-game__question-card">
-            <div className="level-game__question-meta"><span>Rintangan {challengeIndex + 1} / 5</span><span>{question.topic}</span></div>
+            <div className="level-game__question-meta"><span>Soal {challengeIndex + 1} / {challenges.length}</span><span>{stage.title}</span></div>
             <h1>{question.prompt}</h1>
-            <div className="level-game__question-art" aria-hidden="true">
-              <span>{question.symbol}</span>
+            <div className={`level-game__question-art${question.illustration ? ' level-game__question-art--object' : ''}`} aria-hidden="true">
+              {question.illustration ? <QuestionIllustration type={question.illustration} /> : <span>{question.symbol}</span>}
             </div>
             <div className="level-game__answers">
               {question.options.map((option, optionIndex) => {
@@ -265,16 +488,16 @@ function LevelGame({ level, completed, onBack, onComplete }: LevelGameProps) {
                 )
               })}
             </div>
-            {feedback === 'correct' && <div className="level-game__feedback is-correct" role="status"><strong>Benar! Jalan ke rintangan berikutnya terbuka.</strong><span>{question.explanation}</span></div>}
-            {feedback === 'wrong' && <div className="level-game__feedback is-wrong" role="status"><strong>Belum tepat. Coba lagi di rintangan ini.</strong><button onClick={() => { setSelected(null); setFeedback('') }} type="button">Coba lagi</button></div>}
+            {feedback === 'correct' && <div className="level-game__feedback is-correct" role="status"><strong>Benar! Kamu mendapat 100 skor dan 10 koin.</strong><span>{question.explanation}</span></div>}
+            {feedback === 'wrong' && <div className="level-game__feedback is-wrong" role="status"><strong>{status}</strong><button onClick={() => { setSelected(null); setFeedback(''); setStatus('') }} type="button">Coba lagi</button></div>}
           </article>
         )}
       </div>
 
       <nav className="level-game__controls" aria-label="Kontrol hero">
-        <button onClick={moveLeft} type="button" aria-label="Mundur ke titik aman">←</button>
-        <button onClick={moveRight} type="button" aria-label={atObstacle ? 'Hero berada di rintangan' : 'Maju ke rintangan berikutnya'} disabled={atObstacle || walking}>→</button>
-        <button onClick={jump} type="button" aria-label="Lompat ke rintangan" disabled={jumping || walking}>↑</button>
+        <button onClick={moveLeft} type="button" aria-label="Mundur ke pulau sebelumnya" disabled={atObstacle || walking || heroStep === 0}>←</button>
+        <button onClick={moveRight} type="button" aria-label={atObstacle ? 'Pemain tiba di bendera' : 'Maju melewati celah'} disabled={atObstacle || walking}>→</button>
+        <button onClick={jump} type="button" aria-label="Lompat melewati celah" disabled={atObstacle || jumping || walking}>↑</button>
       </nav>
 
       {paused && <div className="level-game__pause-overlay"><div><span>Ⅱ</span><h2>Permainan dijeda</h2><button onClick={() => setPaused(false)} type="button">Lanjut bermain</button><button className="level-game__pause-exit" onClick={onBack} type="button">Kembali ke detail level</button></div></div>}
@@ -283,4 +506,3 @@ function LevelGame({ level, completed, onBack, onComplete }: LevelGameProps) {
 }
 
 export default LevelGame
-

@@ -9,11 +9,9 @@ type OtherScreensProps = {
 }
 
 const lessons = [
-  { title: 'Pulau Bentuk', range: 'Level 1–6', detail: 'Kenali sisi, sudut, persegi, persegi panjang, dan segitiga.' },
-  { title: 'Hutan Segi Empat', range: 'Level 7–12', detail: 'Pelajari jajar genjang, belah ketupat, trapesium, dan keliling.' },
-  { title: 'Pegunungan Segitiga', range: 'Level 13–18', detail: 'Kenali jenis segitiga, jumlah sudut, luas, dan keliling.' },
-  { title: 'Danau Lingkaran', range: 'Level 19–24', detail: 'Pahami jari-jari, diameter, luas, dan keliling lingkaran.' },
-  { title: 'Kastil Geometri', range: 'Level 25–30', detail: 'Uji pemahaman bangun datar dan hitungannya.' },
+  { title: 'Gerbang Pulau Bentuk', range: 'Level 1 • Pengenalan', detail: 'Kenali segitiga, persegi, dan lingkaran dari tampilannya.' },
+  { title: 'Lembah Bentuk', range: 'Level 2 • Pemahaman', detail: 'Pelajari jumlah sisi dan titik sudut bangun datar sederhana.' },
+  { title: 'Hutan Bentuk', range: 'Level 3 • Penerapan', detail: 'Temukan bangun datar pada jam, atap rumah, dan ubin.' },
 ]
 
 function OtherScreens({ tab, stars, unlockedLevel, completedLevels }: OtherScreensProps) {
@@ -22,7 +20,7 @@ function OtherScreens({ tab, stars, unlockedLevel, completedLevels }: OtherScree
       <section className="content-screen" aria-label="Materi bangun datar">
         <p className="content-screen__eyebrow">Belajar sambil menjelajah</p>
         <h1>Materi Bangun Datar</h1>
-        <p className="content-screen__intro">Pilih pulau untuk melihat topik yang akan kamu pelajari.</p>
+        <p className="content-screen__intro">Pelajari bangun datar dalam tiga tahap petualangan.</p>
         <div className="content-screen__cards">
           {lessons.map((lesson, index) => (
             <article className="content-card" key={lesson.title}>
@@ -42,12 +40,12 @@ function OtherScreens({ tab, stars, unlockedLevel, completedLevels }: OtherScree
         <h1>Prestasi</h1>
         <div className="achievement-summary">
           <div><span>⭐</span><strong>{stars}</strong><small>Bintang</small></div>
-          <div><span>🏁</span><strong>{completedLevels.length}/30</strong><small>Level selesai</small></div>
-          <div><span>🗺️</span><strong>{unlockedLevel}/30</strong><small>Level terbuka</small></div>
+          <div><span>🏁</span><strong>{completedLevels.length}/3</strong><small>Level selesai</small></div>
+          <div><span>🗺️</span><strong>{unlockedLevel}/3</strong><small>Level terbuka</small></div>
         </div>
         <article className="content-card achievement-card">
           <span className="achievement-card__icon">🏅</span>
-          <div><strong>Penjelajah Bangun Datar</strong><small>{completedLevels.length >= 30 ? 'Hebat! Semua level selesai.' : `Selesaikan ${30 - completedLevels.length} level lagi untuk menuntaskan peta.`}</small></div>
+          <div><strong>Penjelajah Bangun Datar</strong><small>{completedLevels.length >= 3 ? 'Hebat! Semua level selesai.' : `Selesaikan ${3 - completedLevels.length} level lagi untuk menuntaskan peta.`}</small></div>
         </article>
       </section>
     )
@@ -59,7 +57,7 @@ function OtherScreens({ tab, stars, unlockedLevel, completedLevels }: OtherScree
       <h1>Profil</h1>
       <article className="profile-card">
         <div className="profile-card__avatar">R</div>
-        <div><small>Siswa</small><strong>Rizki</strong><span>Level terbuka {unlockedLevel} dari 30</span></div>
+        <div><small>Siswa</small><strong>Rizki</strong><span>Level terbuka {unlockedLevel} dari 3</span></div>
       </article>
       <div className="achievement-summary profile-summary">
         <div><span>⭐</span><strong>{stars}</strong><small>Total bintang</small></div>

@@ -1,7 +1,7 @@
 type PlayerProfileProps = { level: number }
 
 function PlayerProfile({ level }: PlayerProfileProps) {
-  const progress = Math.round(((level - 1) / 30) * 100)
+  const progress = Math.round(((level - 1) / 3) * 100)
 
   return (
     <section className="player-profile" aria-label="Profil pemain">

@@ -9,15 +9,15 @@ import LevelIntro from './components/LevelIntro'
 import OtherScreens from './components/OtherScreens'
 
 type SavedProgress = { unlockedLevel: number; completedLevels: number[]; stars: number }
-const progressKey = 'petualangan-bangun-datar-progress'
+const progressKey = 'petualangan-bangun-datar-pulau-bentuk-v3'
 
 function readProgress(): SavedProgress {
   try {
     const saved = JSON.parse(localStorage.getItem(progressKey) ?? 'null') as Partial<SavedProgress> | null
     if (saved && Array.isArray(saved.completedLevels)) {
-      const completedLevels = [...new Set(saved.completedLevels.filter((level) => Number.isInteger(level) && level >= 1 && level <= 30))]
+      const completedLevels = [...new Set(saved.completedLevels.filter((level) => Number.isInteger(level) && level >= 1 && level <= 3))]
       return {
-        unlockedLevel: Math.min(30, Math.max(1, Number(saved.unlockedLevel) || 1)),
+        unlockedLevel: completedLevels.includes(2) ? 3 : 2,
         completedLevels,
         stars: Math.max(0, Number(saved.stars) || completedLevels.length),
       }
@@ -25,7 +25,7 @@ function readProgress(): SavedProgress {
   } catch {
     // Mulai dari progres baru jika data tersimpan tidak dapat dibaca.
   }
-  return { unlockedLevel: 1, completedLevels: [], stars: 0 }
+  return { unlockedLevel: 2, completedLevels: [], stars: 0 }
 }
 
 function App() {
@@ -47,20 +47,24 @@ function App() {
 
   function finishLevel(level: number) {
     const alreadyCompleted = progress.completedLevels.includes(level)
-    setProgress((current) => {
-      if (current.completedLevels.includes(level)) return current
+    if (!alreadyCompleted) {
       const next: SavedProgress = {
-        completedLevels: [...current.completedLevels, level].sort((a, b) => a - b),
-        unlockedLevel: Math.min(30, Math.max(current.unlockedLevel, level + 1)),
-        stars: current.stars + 1,
+        completedLevels: [...progress.completedLevels, level].sort((a, b) => a - b),
+        unlockedLevel: Math.min(3, Math.max(progress.unlockedLevel, level + 1)),
+        stars: progress.stars + 1,
       }
+      setProgress(next)
       try { localStorage.setItem(progressKey, JSON.stringify(next)) } catch { /* Progres tetap aktif selama aplikasi terbuka. */ }
-      return next
-    })
-    setSelectedLevel(null)
+    }
     setGameStarted(false)
-    setActiveTab('Peta')
-    setNotice(alreadyCompleted ? `Level ${level} selesai!` : `Hebat! Level ${level} selesai dan 1 bintang didapat.`)
+    if (level < 3) {
+      setSelectedLevel(level + 1)
+      setNotice('')
+    } else {
+      setSelectedLevel(null)
+      setActiveTab('Peta')
+      setNotice(alreadyCompleted ? `Level ${level} selesai!` : `Hebat! Level ${level} selesai dan 1 bintang didapat.`)
+    }
   }
 
   const isPlaying = selectedLevel !== null
@@ -75,7 +79,6 @@ function App() {
           {gameStarted ? (
             <LevelGame
               level={selectedLevel}
-              completed={progress.completedLevels.includes(selectedLevel)}
               onBack={() => setGameStarted(false)}
               onComplete={finishLevel}
             />
@@ -97,8 +100,6 @@ function App() {
             completedLevels={progress.completedLevels}
             onBack={() => { setNotice(''); setActiveTab('Beranda') }}
             onSelectLevel={chooseLevel}
-            onShowMission={() => setNotice(`Misi harian: selesaikan 3 level dengan nilai sempurna. Progres ${missionProgress}/3.`)}
-            onShowCollection={() => setNotice(`Koleksi bintang: ${progress.stars} bintang terkumpul.`)}
             onDismissNotice={() => setNotice('')}
           />
         </>
@@ -124,4 +125,3 @@ function App() {
 }
 
 export default App
-
