@@ -47,16 +47,15 @@ function App() {
 
   function finishLevel(level: number) {
     const alreadyCompleted = progress.completedLevels.includes(level)
-    setProgress((current) => {
-      if (current.completedLevels.includes(level)) return current
+    if (!alreadyCompleted) {
       const next: SavedProgress = {
-        completedLevels: [...current.completedLevels, level].sort((a, b) => a - b),
-        unlockedLevel: Math.min(3, Math.max(current.unlockedLevel, level + 1)),
-        stars: current.stars + 1,
+        completedLevels: [...progress.completedLevels, level].sort((a, b) => a - b),
+        unlockedLevel: Math.min(3, Math.max(progress.unlockedLevel, level + 1)),
+        stars: progress.stars + 1,
       }
+      setProgress(next)
       try { localStorage.setItem(progressKey, JSON.stringify(next)) } catch { /* Progres tetap aktif selama aplikasi terbuka. */ }
-      return next
-    })
+    }
     setGameStarted(false)
     if (level < 3) {
       setSelectedLevel(level + 1)

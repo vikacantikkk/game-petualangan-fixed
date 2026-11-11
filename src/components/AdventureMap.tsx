@@ -43,7 +43,10 @@ function AdventureMap({ notice, unlockedLevel, completedLevels, onBack, onSelect
               style={{ left: `${x}%`, top: `${y}%` }}
               type="button"
             >
-              <span className="adventure-map__badge">{completed ? <span aria-hidden="true">★</span> : level}</span>
+              <span className="adventure-map__badge">
+                {completed ? <span aria-hidden="true">★</span> : level}
+                {locked && <span className="adventure-map__lock" aria-hidden="true">🔒</span>}
+              </span>
             </button>
           )
         })}
